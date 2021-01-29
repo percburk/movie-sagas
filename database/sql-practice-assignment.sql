@@ -49,6 +49,24 @@ WHERE "movies_genres".genre_id = 4 AND "movies_genres".movie_id = 13;
 -- 1. How would you get all movies and all of their genres, but only one row per movie? (For example, on the list page we want to see all the movies and all of the movies' genres that apply)
 -- There're a few ways to do this, research ARRAY_AGG or JSON_AGG
 
+SELECT "movies".title, ARRAY_AGG("genres".name) AS "all_genres" FROM "movies"
+JOIN "movies_genres" ON "movies".id = "movies_genres".movie_id
+JOIN "genres" ON "movies_genres".genre_id = "genres".id
+GROUP BY "movies".title ORDER BY "movies".title;
+
 
 -- 2. Delete the movie "The Martian". It has associated genres data...
 -- You may need to check out the ON DELETE CASCADE for the table columns...
+
+
+-- Needed to change the "movies_genres" table:
+
+CREATE TABLE "movies_genres" (
+  "id" SERIAL PRIMARY KEY,
+  "movie_id" INT REFERENCES "movies" ON DELETE CASCADE NOT NULL,
+  "genre_id" INT REFERENCES "genres" ON DELETE CASCADE NOT NULL
+);
+
+-- Then, deleted The Martian with this query:
+
+DELETE FROM "movies" WHERE "id" = 11;
