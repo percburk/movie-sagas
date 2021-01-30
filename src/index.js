@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App/App.js';
+import App from './components/App/App';
 import axios from 'axios';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 // Provider allows us to use redux within our react app
@@ -17,6 +17,7 @@ import { takeEvery, put } from 'redux-saga/effects';
 function* watcherSaga() {
   yield takeEvery('FETCH_MOVIES', fetchAllMovies);
   yield takeEvery('FETCH_GENRES', fetchAllGenres);
+  yield takeEvery('FETCH_ONE_MOVIE', fetchOneMovie);
 }
 
 // GET all movies from the DB
@@ -27,6 +28,18 @@ function* fetchAllMovies() {
     yield put({ type: 'SET_MOVIES', payload: movies.data });
   } catch (err) {
     console.log('error in fetchAllMovies:', err);
+  }
+}
+
+// GET for one movie from DB for MovieDetails
+function* fetchOneMovie(action) {
+  const id = action.payload;
+  try {
+    const movie = yield axios.get(`/api/movie/${id}`);
+    console.log('GET from fetchOneMovie', movie);
+    yield put({ type: 'SET_MOVIE_FOR_DETAILS', payload: movie.data[0] });
+  } catch (err) {
+    console.log('error in fetchOneMovie', err);
   }
 }
 
@@ -56,6 +69,15 @@ const moviesReducer = (state = [], action) => {
   }
 };
 
+const movieDetailsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_MOVIE_FOR_DETAILS':
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 // Used to store the movie genres from the server
 const genresReducer = (state = [], action) => {
   switch (action.type) {
@@ -70,6 +92,7 @@ const genresReducer = (state = [], action) => {
 const storeInstance = createStore(
   combineReducers({
     moviesReducer,
+    movieDetailsReducer,
     genresReducer,
   }),
   // Add sagaMiddleware and logger to our store
