@@ -5,14 +5,8 @@ import { TextField, Button, makeStyles, Chip, Box } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
-      margin: theme.spacing(1),
-      width: '25ch',
+      margin: theme.spacing(0.5),
     },
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300,
   },
   chips: {
     display: 'flex',
@@ -56,9 +50,11 @@ function AddMovie() {
       : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
   };
 
+  console.log(chipColors);
+
   return (
     <>
-      <Box className={classes.root}>
+      <Box className={classes.root} display="flex">
         <TextField
           variant="outlined"
           label="Movie Title"
@@ -78,11 +74,16 @@ function AddMovie() {
           onChange={handleTextChange('description')}
           value={movieToAdd.description}
         />
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          Submit
+        </Button>
       </Box>
+
       <Box className={classes.root}>
         {genres.map((entry, i) => {
           return (
             <Chip
+              
               key={entry.id}
               label={entry.name}
               color={chipColors[i] ? 'primary' : 'default'}
@@ -93,9 +94,6 @@ function AddMovie() {
           );
         })}
       </Box>
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Submit
-      </Button>
     </>
   );
 }
