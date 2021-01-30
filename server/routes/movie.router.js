@@ -61,21 +61,22 @@ router.post('/', (req, res) => {
       console.log('New Movie Id:', result.rows[0].id); // ID is here
       const createdMovieId = result.rows[0].id;
 
+      // Use a 'for' loop to create the right amount of '$" values for query
       let sqlArrayValues = '';
       for (i = 2; i <= req.body.genreArray.length + 1; i++) {
         sqlArrayValues += `($1, $${i}),`;
       }
-      sqlArrayValues = sqlArrayValues.slice(0, -1);
+      sqlArrayValues = sqlArrayValues.slice(0, -1); // Takes off the last comma
 
 
-      // Now handle the genre reference
+      // Add genres to new movie ID
       const sqlTextNewMovieGenre = `
         INSERT INTO "movies_genres" ("movie_id", "genre_id")
         VALUES 
         ${sqlArrayValues};
       `;
 
-      // Second query adds genre to new movie, loop through array of genres
+      // Second query adds contents of genreArray to new movie
       pool
         .query(sqlTextNewMovieGenre, [createdMovieId, ...req.body.genreArray])
         .then(res.sendStatus(201)) // send back success!
