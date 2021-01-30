@@ -1,18 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  TextField,
-  MenuItem,
-  Button,
-  makeStyles,
-  useTheme,
-  FormControl,
-  Select,
-  Chip,
-  InputLabel,
-  Input,
-  Box
-} from '@material-ui/core';
+import { TextField, Button, makeStyles, Chip, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,30 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getStyles = (genre, genresToAdd, theme) => {
-  return {
-    fontWeight:
-      genresToAdd.indexOf(genre) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-};
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 function AddMovie() {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const theme = useTheme();
   const genres = useSelector((state) => state.genresReducer);
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
@@ -81,15 +48,17 @@ function AddMovie() {
     setMovieToAdd({ ...movieToAdd, [key]: event.target.value });
   };
 
-  const handleGenreAddition = (event) => {
-    setGenresToAdd(event.target.value);
+  const handleGenreAddition = (id) => {
+    genresToAdd.indexOf(id) === -1
+      ? setGenresToAdd([...genresToAdd, id])
+      : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
   };
 
   console.log(genresToAdd);
 
   return (
     <>
-      <form className={classes.root} onSubmit={handleSubmit} autoComplete="off">
+      <Box className={classes.root}>
         <TextField
           variant="outlined"
           label="Movie Title"
@@ -109,38 +78,25 @@ function AddMovie() {
           onChange={handleTextChange('description')}
           value={movieToAdd.description}
         />
-        <FormControl className={classes.formControl}>
-          <InputLabel id="genreLabel">Genres</InputLabel>
-          <Select
-            labelId="genreLabel"
-            multiple
-            value={genresToAdd}
-            onChange={handleGenreAddition}
-            input={<Input id="genreInput" />}
-            renderValue={(selected) => {
-              <Box className={classes.chips}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-              </Box>;
-            }}
-            MenuProps={MenuProps}
-          >
-            {genres.map((entry) => (
-              <MenuItem
-                key={entry.id}
-                value={entry}
-                style={getStyles(entry, genresToAdd, theme)}
-              >
-                {entry.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="outlined" type="submit">
-          Submit
-        </Button>
-      </form>
+      </Box>
+      <Box className={classes.root}>
+        {genres.map((entry) => {
+          return (
+            <Chip
+              key={entry.id}
+              label={entry.name}
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                handleGenreAddition(entry.id);
+              }}
+            />
+          );
+        })}
+      </Box>
+      <Button variant="outlined" onClick={handleSubmit}>
+        Submit
+      </Button>
     </>
   );
 }
