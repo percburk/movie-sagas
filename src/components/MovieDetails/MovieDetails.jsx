@@ -5,14 +5,13 @@ import { useHistory, useParams } from 'react-router-dom';
 function MovieDetails() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const movie = useSelector((state) => state.oneMovieReducer);
+  const movie = useSelector((state) => state.movieReducer);
   let { id } = useParams();
-
   useEffect(() => dispatch({ type: 'FETCH_ONE_MOVIE', payload: id }), []);
 
   const handleBack = () => {
     history.push('/');
-  }
+  };
 
   return (
     <>

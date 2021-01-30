@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   TextField,
-  Menu,
   MenuItem,
   Button,
   makeStyles,
-  Checkbox,
+  useTheme,
+  FormControl,
+  Select,
+  Chip,
+  InputLabel,
+  Input,
+  Box
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,14 +21,45 @@ const useStyles = makeStyles((theme) => ({
       width: '25ch',
     },
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
+  },
 }));
+
+const getStyles = (genre, genresToAdd, theme) => {
+  return {
+    fontWeight:
+      genresToAdd.indexOf(genre) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+};
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 function AddMovie() {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const theme = useTheme();
   const genres = useSelector((state) => state.genresReducer);
-  const [isChecked, setIsChecked] = useState(genres.slice().fill(false));
-  const [anchorEl, setAnchorEl] = useState(null);
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
@@ -45,24 +81,14 @@ function AddMovie() {
     setMovieToAdd({ ...movieToAdd, [key]: event.target.value });
   };
 
-  const handleGenreMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const toggleCheckedGenre = (index, id) => {
-    setIsChecked(isChecked.map((check, i) => (i === index ? !check : check)));
-    if (genresToAdd.indexOf(id) === -1) {
-      setGenresToAdd([...genresToAdd, id]);
-    } else {
-      setGenresToAdd(genresToAdd.filter((item) => item !== id));
-    }
+  const handleGenreAddition = (event) => {
+    setGenresToAdd(event.target.value);
   };
 
   console.log(genresToAdd);
 
   return (
     <>
-      <p>In AddMovies!</p>
       <form className={classes.root} onSubmit={handleSubmit} autoComplete="off">
         <TextField
           variant="outlined"
@@ -79,33 +105,38 @@ function AddMovie() {
         <TextField
           variant="outlined"
           multiline
-          rows={4}
           label="Movie Description"
           onChange={handleTextChange('description')}
           value={movieToAdd.description}
         />
-        <Button variant="outlined" onClick={handleGenreMenu}>
-          Select Genres
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {genres.map((genreItem, i) => {
-            return (
-              <MenuItem key={genreItem.id}>
-                <Checkbox
-                  key={i}
-                  checked={isChecked[i]}
-                  onClick={() => toggleCheckedGenre(i, genreItem.id)}
-                />
-                {genreItem.name}
+        <FormControl className={classes.formControl}>
+          <InputLabel id="genreLabel">Genres</InputLabel>
+          <Select
+            labelId="genreLabel"
+            multiple
+            value={genresToAdd}
+            onChange={handleGenreAddition}
+            input={<Input id="genreInput" />}
+            renderValue={(selected) => {
+              <Box className={classes.chips}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} className={classes.chip} />
+                ))}
+              </Box>;
+            }}
+            MenuProps={MenuProps}
+          >
+            {genres.map((entry) => (
+              <MenuItem
+                key={entry.id}
+                value={entry}
+                style={getStyles(entry, genresToAdd, theme)}
+              >
+                {entry.name}
               </MenuItem>
-            );
-          })}
-        </Menu>
+            ))}
+          </Select>
+        </FormControl>
         <Button variant="outlined" type="submit">
           Submit
         </Button>
