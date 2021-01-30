@@ -27,12 +27,15 @@ function AddMovie() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
+  // const [chipColors, setChipColors] = useState(genres.split()
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
     poster: '',
     description: '',
   });
+
+  const primary = "primary";
 
   useEffect(() => dispatch({ type: 'FETCH_GENRES' }), []);
 
@@ -48,11 +51,19 @@ function AddMovie() {
     setMovieToAdd({ ...movieToAdd, [key]: event.target.value });
   };
 
-  const handleGenreAddition = (id) => {
+  const handleGenreAddition = (id, index) => {
     genresToAdd.indexOf(id) === -1
       ? setGenresToAdd([...genresToAdd, id])
       : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
   };
+
+  //      setIsChecked(isChecked.map((check, i) => (i === index ? !check : check)));
+  //   if (genresToAdd.indexOf(id) === -1) {
+  //     setGenresToAdd([...genresToAdd, id]);
+  //   } else {
+  //     setGenresToAdd(genresToAdd.filter((item) => item !== id));
+  //   }
+  // };
 
   console.log(genresToAdd);
 
@@ -80,7 +91,7 @@ function AddMovie() {
         />
       </Box>
       <Box className={classes.root}>
-        {genres.map((entry) => {
+        {genres.map((entry, i) => {
           return (
             <Chip
               key={entry.id}
@@ -88,7 +99,7 @@ function AddMovie() {
               variant="outlined"
               color="primary"
               onClick={() => {
-                handleGenreAddition(entry.id);
+                handleGenreAddition(entry.id, i);
               }}
             />
           );
