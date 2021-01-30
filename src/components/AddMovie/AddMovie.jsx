@@ -27,15 +27,13 @@ function AddMovie() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
-  // const [chipColors, setChipColors] = useState(genres.split()
+  const [chipColors, setChipColors] = useState(genres.slice().fill(false));
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
     poster: '',
     description: '',
   });
-
-  const primary = "primary";
 
   useEffect(() => dispatch({ type: 'FETCH_GENRES' }), []);
 
@@ -52,20 +50,11 @@ function AddMovie() {
   };
 
   const handleGenreAddition = (id, index) => {
+    setChipColors(chipColors.map((chip, i) => (i === index ? !chip : chip)));
     genresToAdd.indexOf(id) === -1
       ? setGenresToAdd([...genresToAdd, id])
       : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
   };
-
-  //      setIsChecked(isChecked.map((check, i) => (i === index ? !check : check)));
-  //   if (genresToAdd.indexOf(id) === -1) {
-  //     setGenresToAdd([...genresToAdd, id]);
-  //   } else {
-  //     setGenresToAdd(genresToAdd.filter((item) => item !== id));
-  //   }
-  // };
-
-  console.log(genresToAdd);
 
   return (
     <>
@@ -96,8 +85,7 @@ function AddMovie() {
             <Chip
               key={entry.id}
               label={entry.name}
-              variant="outlined"
-              color="primary"
+              color={chipColors[i] ? 'primary' : 'default'}
               onClick={() => {
                 handleGenreAddition(entry.id, i);
               }}
@@ -105,7 +93,7 @@ function AddMovie() {
           );
         })}
       </Box>
-      <Button variant="outlined" onClick={handleSubmit}>
+      <Button variant="contained" color="primary" onClick={handleSubmit}>
         Submit
       </Button>
     </>
