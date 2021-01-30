@@ -18,6 +18,7 @@ function* watcherSaga() {
   yield takeEvery('FETCH_MOVIES', fetchAllMovies);
   yield takeEvery('FETCH_GENRES', fetchAllGenres);
   yield takeEvery('FETCH_ONE_MOVIE', fetchOneMovie);
+  yield takeEvery('POST_NEW_MOVIE', postNewMovie);
 }
 
 // GET all movies from the DB
@@ -51,6 +52,17 @@ function* fetchAllGenres() {
     yield put({ type: 'SET_GENRES', payload: genres.data });
   } catch (err) {
     console.log('error in fetchAllGenres:', err);
+  }
+}
+
+// POST new movie to the DB
+function* postNewMovie(action) {
+  const newMovie = action.payload;
+  try {
+    yield axios.post('/api/movie', newMovie);
+    yield put({ type: 'FETCH_MOVIES' });
+  } catch (err) {
+    console.log('error in postNewMovie', err);
   }
 }
 

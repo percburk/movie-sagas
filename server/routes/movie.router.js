@@ -61,15 +61,23 @@ router.post('/', (req, res) => {
       console.log('New Movie Id:', result.rows[0].id); // ID is here
       const createdMovieId = result.rows[0].id;
 
+      let sqlArrayValues = '';
+      for (i = 2; i <= req.body.genreArray.length + 1; i++) {
+        sqlArrayValues += `($1, $${i}),`;
+      }
+      sqlArrayValues = sqlArrayValues.slice(0, -1);
+
+
       // Now handle the genre reference
       const sqlTextNewMovieGenre = `
-        INSERT INTO "movies_genres" ("movies_id", "genres_id")
-        VALUES  ($1, $2);
+        INSERT INTO "movies_genres" ("movie_id", "genre_id")
+        VALUES 
+        ${sqlArrayValues};
       `;
 
-      // Second query adds genre to the new movie
+      // Second query adds genre to new movie, loop through array of genres
       pool
-        .query(sqlTextNewMovieGenre, [createdMovieId, req.body.genre_id])
+        .query(sqlTextNewMovieGenre, [createdMovieId, ...req.body.genreArray])
         .then(res.sendStatus(201)) // send back success!
         .catch((err) => {
           // Catch for second query

@@ -7,7 +7,9 @@ function MovieList() {
   const history = useHistory();
   const dispatch = useDispatch();
   const movies = useSelector((state) => state.moviesReducer);
-  useEffect(() => dispatch({ type: 'FETCH_MOVIES' }), []);
+  useEffect(() => {
+    dispatch({ type: 'FETCH_MOVIES' });
+  }, []);
 
   const handleClickPoster = (id) => {
     history.push(`/details/${id}`);
@@ -28,7 +30,7 @@ function MovieList() {
                 onClick={() => handleClickPoster(movie.id)}
               />
               {movie.genre_group &&
-                movie.genre_group.map((item) => <p>{item}</p>)}
+                movie.genre_group.map((item, i) => <p key={i}>{item}</p>)}
             </div>
           );
         })}
