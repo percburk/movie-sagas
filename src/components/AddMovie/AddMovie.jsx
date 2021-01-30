@@ -1,20 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  TextField,
-  Menu,
-  MenuItem,
-  Button,
-  makeStyles,
-  Checkbox,
-} from '@material-ui/core';
+import { TextField, Button, makeStyles, Chip, Box } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
-      margin: theme.spacing(1),
-      width: '25ch',
+      margin: theme.spacing(0.5),
     },
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
   },
 }));
 
@@ -22,8 +21,7 @@ function AddMovie() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
-  const [isChecked, setIsChecked] = useState(genres.slice().fill(false));
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [chipColors, setChipColors] = useState(genres.slice().fill(false));
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
@@ -45,25 +43,18 @@ function AddMovie() {
     setMovieToAdd({ ...movieToAdd, [key]: event.target.value });
   };
 
-  const handleGenreMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleGenreAddition = (id, index) => {
+    setChipColors(chipColors.map((chip, i) => (i === index ? !chip : chip)));
+    genresToAdd.indexOf(id) === -1
+      ? setGenresToAdd([...genresToAdd, id])
+      : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
   };
 
-  const toggleCheckedGenre = (index, id) => {
-    setIsChecked(isChecked.map((check, i) => (i === index ? !check : check)));
-    if (genresToAdd.indexOf(id) === -1) {
-      setGenresToAdd([...genresToAdd, id]);
-    } else {
-      setGenresToAdd(genresToAdd.filter((item) => item !== id));
-    }
-  };
-
-  console.log(genresToAdd);
+  console.log(chipColors);
 
   return (
     <>
-      <p>In AddMovies!</p>
-      <form className={classes.root} onSubmit={handleSubmit} autoComplete="off">
+      <Box className={classes.root} display="flex">
         <TextField
           variant="outlined"
           label="Movie Title"
@@ -79,37 +70,30 @@ function AddMovie() {
         <TextField
           variant="outlined"
           multiline
-          rows={4}
           label="Movie Description"
           onChange={handleTextChange('description')}
           value={movieToAdd.description}
         />
-        <Button variant="outlined" onClick={handleGenreMenu}>
-          Select Genres
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {genres.map((genreItem, i) => {
-            return (
-              <MenuItem key={genreItem.id}>
-                <Checkbox
-                  key={i}
-                  checked={isChecked[i]}
-                  onClick={() => toggleCheckedGenre(i, genreItem.id)}
-                />
-                {genreItem.name}
-              </MenuItem>
-            );
-          })}
-        </Menu>
-        <Button variant="outlined" type="submit">
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
           Submit
         </Button>
-      </form>
+      </Box>
+
+      <Box className={classes.root}>
+        {genres.map((entry, i) => {
+          return (
+            <Chip
+              
+              key={entry.id}
+              label={entry.name}
+              color={chipColors[i] ? 'primary' : 'default'}
+              onClick={() => {
+                handleGenreAddition(entry.id, i);
+              }}
+            />
+          );
+        })}
+      </Box>
     </>
   );
 }

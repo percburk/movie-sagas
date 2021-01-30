@@ -1,4 +1,9 @@
-.movies {
-    display : flex;
-    flex-wrap: wrap;
+.image {
+  height: 250px;
+  transition: opacity 0.3s ease;
+}
+
+.image:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }

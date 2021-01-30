@@ -1,5 +1,5 @@
 import { HashRouter as Router, Route } from 'react-router-dom';
-import { Container } from '@material-ui/core';
+import { Container, Typography, Box } from '@material-ui/core';
 import './App.css';
 import MovieList from '../MovieList/MovieList';
 import MovieDetails from '../MovieDetails/MovieDetails';
@@ -7,8 +7,10 @@ import AddMovie from '../AddMovie/AddMovie';
 
 function App() {
   return (
-    <Container className="App" maxWidth="lg">
-      <h1>The Movies Saga!</h1>
+    <Container maxWidth="lg">
+      <Box >
+        <Typography variant="h3">Now Playing</Typography>
+      </Box>
       <Router>
         <Route path="/" exact>
           <MovieList />
