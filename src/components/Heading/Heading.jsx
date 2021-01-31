@@ -1,14 +1,13 @@
 import { Typography, Box, Fab } from '@material-ui/core';
-import { Theaters } from '@material-ui/icons';
 import { Add } from '@material-ui/icons';
 import './Heading.css';
 
 function Heading({ setDialogOpen }) {
   return (
-    <Box height="90vh" className="heading" marginBottom={2}>
+    <Box height="85vh" className="heading" marginBottom={2}>
       <Box display="flex" p={3}>
         <Box flexGrow={1}>
-          <Typography variant="h3" color="secondary">
+          <Typography variant="h3">
             Now Playing
           </Typography>
         </Box>

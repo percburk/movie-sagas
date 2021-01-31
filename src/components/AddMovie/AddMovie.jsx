@@ -130,7 +130,10 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => setDialogOpen(false)}
+            onClick={() => {
+              setDialogOpen(false);
+              setAlertOpen(false);
+            }}
           >
             Cancel
           </Button>
