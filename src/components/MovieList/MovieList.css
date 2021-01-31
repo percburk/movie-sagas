@@ -7,3 +7,12 @@
   cursor: pointer;
   opacity: 0.8;
 }
+
+.fab {
+  margin: 0px;
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  left: auto;
+  position: fixed;
+};

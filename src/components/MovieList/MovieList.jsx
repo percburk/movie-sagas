@@ -2,8 +2,15 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import './MovieList.css';
-import { Box, Typography, Chip, makeStyles, Paper, Grid, Divider } from '@material-ui/core';
-
+import {
+  Box,
+  Typography,
+  Chip,
+  makeStyles,
+  Paper,
+  Grid,
+  Divider,
+} from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -30,7 +37,6 @@ function MovieList() {
 
   return (
     <Box display="flex" flexWrap="wrap" justifyContent="center">
-      <button onClick={() => history.push('/add')}>Add a new movie!</button>
       {movies.map((item) => {
         return (
           <Box m={2} key={item.id}>
