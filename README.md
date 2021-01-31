@@ -24,7 +24,7 @@ We displayed the list of movies, and used client side routing to show individual
 ## Installation
 
 1. Create a database named `saga_movies_weekend`.
-2. The queries for creating the database table are in `tables.sql`. The project is built on [Postgres](https://www.postgresql.org/download/), so you will need to make sure to have that installed. We recommend using Postico to run those queries as that was used to create the queries.
+2. The queries for creating the database table are in `database.sql`. The project is built on [Postgres](https://www.postgresql.org/download/), so you will need to make sure to have that installed. We recommend using Postico to run those queries as that was used to create the queries.
 3. Open up your editor of choice and run an `npm install`.
 4. Run `npm run server` in your terminal.
 5. Run `npm run client` in your terminal, which will open a new browser tab for you.
