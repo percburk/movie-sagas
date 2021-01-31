@@ -1,5 +1,5 @@
 .heading {
-  background-image: url('./jakob-owens-CiUR8zISX60-unsplash.jpg');
+  background-image: linear-gradient(to bottom, rgba(245, 246, 252, 0.473), rgba(32, 3, 3, 0.466)), url('https://media2.fdncms.com/memphisflyer/imager/u/original/15503270/davebowman.jpeg');
+  background-position: center center;
   background-size: cover;
-  background-position: right 35% bottom 60%;
 }
