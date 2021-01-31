@@ -22,13 +22,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MovieList() {
+function MovieList({ bodyRef }) {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const movies = useSelector((state) => state.moviesReducer);
   useEffect(() => {
     dispatch({ type: 'FETCH_MOVIES' });
+    dispatch({type: 'FETCH_GENRES'})
   }, []);
 
   const handleClickPoster = (id) => {
@@ -36,7 +37,7 @@ function MovieList() {
   };
 
   return (
-    <Box display="flex" flexWrap="wrap" justifyContent="center">
+    <Box ref={bodyRef} display="flex" flexWrap="wrap" justifyContent="center">
       {movies.map((item) => {
         return (
           <Box m={2} key={item.id}>
@@ -44,7 +45,7 @@ function MovieList() {
               <Box p={2} width={240} height={400}>
                 <Grid container direction="column" align="center" spacing={2}>
                   <Grid item>
-                    <Box paddingBottom={1}>
+                    <Box py={1}>
                       <img
                         className="image"
                         src={item.poster}
@@ -61,10 +62,10 @@ function MovieList() {
                   </Grid>
                   <Grid item>
                     <Box className={classes.root}>
-                      {item.genre_group.map((name, i) => (
+                      {item.genre_group.map((genreEntry, i) => (
                         <Chip
                           key={i}
-                          label={name}
+                          label={genreEntry}
                           variant="outlined"
                           className={classes.chip}
                           size="small"

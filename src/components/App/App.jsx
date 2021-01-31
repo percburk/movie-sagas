@@ -1,40 +1,35 @@
 import { HashRouter as Router, Route } from 'react-router-dom';
-import { useState } from 'react';
-import { Container, Typography, Box, Fab } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
-import './App.css';
+import { useState, useRef } from 'react';
 import MovieList from '../MovieList/MovieList';
 import MovieDetails from '../MovieDetails/MovieDetails';
 import AddMovie from '../AddMovie/AddMovie';
+import Heading from '../Heading/Heading';
+import './App.css';
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const bodyRef = useRef();
+
+  const handleClickToBody = () => {
+    bodyRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <Container maxWidth="lg">
-      <Box display="flex" alignItems="center" p={3}>
-        <Box flexGrow={1}>
-          <Typography variant="h3">Now Playing</Typography>
-        </Box>
-        <Box>
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={() => setDialogOpen(true)}
-          >
-            <Add /> Add a new movie
-          </Fab>
-        </Box>
-      </Box>
+    <div>
       <Router>
         <Route path="/" exact>
-          <MovieList />
+          <Heading
+            setDialogOpen={setDialogOpen}
+            handleClickToBody={handleClickToBody}
+          />
+          <MovieList bodyRef={bodyRef} />
         </Route>
         <Route path="/details/:id">
-          <MovieDetails />
+          <MovieDetails setDialogOpen={setDialogOpen} />
         </Route>
         <AddMovie dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
       </Router>
-    </Container>
+    </div>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -10,7 +11,11 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
+  Collapse,
+  IconButton,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Close } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +26,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddMovie({ dialogOpen, setDialogOpen }) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
@@ -31,17 +38,25 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
     description: '',
   });
 
-  useEffect(() => dispatch({ type: 'FETCH_GENRES' }), []);
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'POST_NEW_MOVIE',
-      payload: { ...movieToAdd, genreArray: genresToAdd },
-    });
-    setGenresToAdd([]);
-    setMovieToAdd({ title: '', poster: '', description: '' });
-    setDialogOpen(false);
+    if (
+      movieToAdd.title &&
+      movieToAdd.poster &&
+      movieToAdd.description &&
+      genresToAdd[0]
+    ) {
+      dispatch({
+        type: 'POST_NEW_MOVIE',
+        payload: { ...movieToAdd, genreArray: genresToAdd },
+      });
+      setGenresToAdd([]);
+      setMovieToAdd({ title: '', poster: '', description: '' });
+      setDialogOpen(false);
+      history.push('/');
+    } else {
+      setAlertOpen(true);
+    }
   };
 
   const handleTextChange = (key) => (event) => {
@@ -49,77 +64,102 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
   };
 
   const handleGenreAddition = (id) => {
-    genresToAdd.indexOf(id) === -1
-      ? setGenresToAdd([...genresToAdd, id])
-      : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
+    if (genresToAdd.indexOf(id) === -1) {
+      setGenresToAdd([...genresToAdd, id]);
+    } else {
+      setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
+    }
   };
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-      <DialogTitle align="center">Add a New Movie</DialogTitle>
-      <DialogContent>
+      <Box p={3}>
+        <DialogTitle align="center">Add a New Movie</DialogTitle>
+        <DialogContent>
+          <Box display="flex" justifyContent="center">
+            <Box width="50%" p={1}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Movie Title"
+                onChange={handleTextChange('title')}
+                value={movieToAdd.title}
+              />
+            </Box>
+            <Box width="50%" p={1}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Poster Image Link"
+                onChange={handleTextChange('poster')}
+                value={movieToAdd.poster}
+              />
+            </Box>
+          </Box>
+          <Box display="flex" justifyContent="center">
+            <Box width="50%" p={1}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                multiline
+                label="Movie Description"
+                onChange={handleTextChange('description')}
+                value={movieToAdd.description}
+                rows={10}
+              />
+            </Box>
+            <Box className={classes.root} width="50%" p={1}>
+              {genres.map((entry) => {
+                return (
+                  <Chip
+                    key={entry.id}
+                    label={entry.name}
+                    color={
+                      genresToAdd.indexOf(entry.id) === -1
+                        ? 'default'
+                        : 'primary'
+                    }
+                    onClick={() => handleGenreAddition(entry.id)}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+        </DialogContent>
         <Box display="flex" justifyContent="center">
-          <Box width="50%" p={1}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Movie Title"
-              onChange={handleTextChange('title')}
-              value={movieToAdd.title}
-            />
-          </Box>
-          <Box width="50%" p={1}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              label="Poster Image Link"
-              onChange={handleTextChange('poster')}
-              value={movieToAdd.poster}
-            />
-          </Box>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                setDialogOpen(false);
+                setAlertOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </DialogActions>
         </Box>
-        <Box display="flex" justifyContent="center">
-          <Box width="50%" p={1}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              multiline
-              label="Movie Description"
-              onChange={handleTextChange('description')}
-              value={movieToAdd.description}
-              rows={10}
-            />
-          </Box>
-          <Box className={classes.root} width="50%" p={1}>
-            {genres.map((entry) => {
-              return (
-                <Chip
-                  key={entry.id}
-                  label={entry.name}
-                  color={
-                    genresToAdd.indexOf(entry.id) === -1 ? 'default' : 'primary'
-                  }
-                  onClick={() => handleGenreAddition(entry.id)}
-                />
-              );
-            })}
-          </Box>
-        </Box>
-      </DialogContent>
-      <Box display="flex" justifyContent="center">
-        <DialogActions>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => setDialogOpen(false)}
-          >
-            Cancel
-          </Button>
-          <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </DialogActions>
       </Box>
+      <Collapse in={alertOpen}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              color="inherit"
+              size="small"
+              onClick={() => setAlertOpen(false)}
+            >
+              <Close />
+            </IconButton>
+          }
+        >
+          Please fill out all fields!
+        </Alert>
+      </Collapse>
     </Dialog>
   );
 }

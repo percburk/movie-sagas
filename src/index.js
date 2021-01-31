@@ -19,6 +19,7 @@ function* watcherSaga() {
   yield takeEvery('FETCH_GENRES', fetchAllGenres);
   yield takeEvery('FETCH_ONE_MOVIE', fetchOneMovie);
   yield takeEvery('POST_NEW_MOVIE', postNewMovie);
+  yield takeEvery('EDIT_MOVIE', editMovie);
 }
 
 // GET all movies from the DB
@@ -63,6 +64,17 @@ function* postNewMovie(action) {
     yield put({ type: 'FETCH_MOVIES' });
   } catch (err) {
     console.log('error in postNewMovie', err);
+  }
+}
+
+// PUT route to edit movie
+function* editMovie(action) {
+  const movieEdited = action.payload;
+  try {
+    yield axios.put(`/api/movie/edit/${movieEdited.id}`, movieEdited);
+    yield put({ type: 'FETCH_MOVIES' });
+  } catch (err) {
+    console.log('error in editMovie', err);
   }
 }
 
