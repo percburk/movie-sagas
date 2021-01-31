@@ -142,12 +142,12 @@ function EditMovie({
           <DialogActions>
             <Button
               variant="contained"
-              color="secondary"
+              color="default"
               onClick={handleCancel}
             >
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
+            <Button variant="contained" color="secondary" onClick={handleSubmit}>
               Submit
             </Button>
           </DialogActions>

@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Box, Paper, Typography, Button, Fab } from '@material-ui/core';
+import { Grid, Box, Paper, Typography, Button, Fab, makeStyles } from '@material-ui/core';
 import { ArrowBackIos, Add, Edit } from '@material-ui/icons';
 import EditMovie from '../EditMovie/EditMovie';
+import './MovieDetails.css';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1.5),
+    },
+  },
+}));
 
 function MovieDetails({ setDialogOpen }) {
+  const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
   const movie = useSelector((state) => state.oneMovieReducer);
@@ -39,10 +49,10 @@ function MovieDetails({ setDialogOpen }) {
 
   return (
     <>
-      <Box>
-        <Box display="flex" p={5}>
+      <Box className="heading">
+        <Box display="flex" p={5} alignItems="center">
           <Box flexGrow={1}>
-            <Typography variant="h3">Now Playing</Typography>
+            <Typography variant="h2">Now Playing</Typography>
           </Box>
           <Box>
             <Fab
@@ -60,7 +70,7 @@ function MovieDetails({ setDialogOpen }) {
           <Grid item xs={4}>
             <Paper elevation={4}>
               <Box p={6} display="flex" justifyContent="center">
-                <img style={{ height: '400px' }} src={movie.poster} />
+                <img className="imageDetails" src={movie.poster} />
               </Box>
             </Paper>
           </Grid>
@@ -85,22 +95,24 @@ function MovieDetails({ setDialogOpen }) {
                     ))}
                 </Box>
               </Box>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleBack}
-                startIcon={<ArrowBackIos />}
-              >
-                Go back
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleEditOpen}
-                startIcon={<Edit />}
-              >
-                Edit movie
-              </Button>
+              <Box className={classes.root} display="flex">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleBack}
+                  startIcon={<ArrowBackIos />}
+                >
+                  Go back
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleEditOpen}
+                  startIcon={<Edit />}
+                >
+                  Edit movie
+                </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>
