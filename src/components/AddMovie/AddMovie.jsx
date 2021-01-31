@@ -130,7 +130,7 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
           <DialogActions>
             <Button
               variant="contained"
-              color="secondary"
+              color="error"
               onClick={() => {
                 setDialogOpen(false);
                 setAlertOpen(false);
@@ -138,7 +138,7 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
             >
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
+            <Button variant="contained" color="secondary" onClick={handleSubmit}>
               Submit
             </Button>
           </DialogActions>

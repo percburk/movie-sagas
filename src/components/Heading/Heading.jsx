@@ -1,14 +1,13 @@
 import { Typography, Box, Fab } from '@material-ui/core';
 import { Add, ArrowDownward } from '@material-ui/icons';
 import './Heading.css';
-import { useRef } from 'react';
 
 function Heading({ setDialogOpen, handleClickToBody }) {
   return (
     <Box height="100vh" className="heading" marginBottom={2}>
-      <Box display="flex" p={5} height="70vh">
+      <Box display="flex" p={5} height="80vh">
         <Box flexGrow={1}>
-          <Typography variant="h3">Now Playing</Typography>
+          <Typography variant="h2">Now Playing</Typography>
         </Box>
         <Box>
           <Fab
@@ -16,14 +15,26 @@ function Heading({ setDialogOpen, handleClickToBody }) {
             color="primary"
             onClick={() => setDialogOpen(true)}
           >
-            <Add /> Add a new movie
+            <Add />
+            Add a new movie
           </Fab>
         </Box>
       </Box>
-      <Box display="flex" p={5} height="10vh" justifyContent="flex-end">
-        <Fab onClick={handleClickToBody}>
-          <ArrowDownward />
-        </Fab>
+      <Box
+        display="flex"
+        p={5}
+        height="10vh"
+        justifyContent="flex-end"
+        alignItems="center"
+      >
+        <Box flexGrow={1}>
+          <Typography variant="body1">2001: A Space Odyssey, directed by Stanley Kubrick</Typography>
+        </Box>
+        <Box>
+          <Fab onClick={handleClickToBody} color="primary">
+            <ArrowDownward />
+          </Fab>
+        </Box>
       </Box>
     </Box>
   );
