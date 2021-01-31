@@ -112,6 +112,7 @@ function MovieDetails({ setDialogOpen }) {
         setEditMovie={setEditMovie}
         editGenre={editGenre}
         setEditGenre={setEditGenre}
+        id={id}
       />
     </>
   );

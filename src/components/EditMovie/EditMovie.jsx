@@ -11,7 +11,11 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
+  Collapse,
+  IconButton,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Close } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,23 +32,33 @@ function EditMovie({
   setEditMovie,
   editGenre,
   setEditGenre,
+  id,
 }) {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    dispatch({
-      type: 'EDIT_MOVIE',
-      payload: { ...editMovie, genreArray: editGenre },
-    });
-    setEditGenre([]);
-    setEditMovie({ id: null, title: '', poster: '', description: '' });
-    setEditOpen(false);
-    history.push('/');
+    if (
+      editMovie.title &&
+      editMovie.poster &&
+      editMovie.description &&
+      editGenre[0]
+    ) {
+      dispatch({
+        type: 'EDIT_MOVIE',
+        payload: { ...editMovie, genreArray: editGenre },
+      });
+      setEditGenre([]);
+      setEditMovie({ id: null, title: '', poster: '', description: '' });
+      setEditOpen(false);
+      history.push(`/details/${id}`);
+    } else {
+      setAlertOpen(true);
+    }
   };
 
   const handleTextChange = (key) => (event) => {
@@ -139,6 +153,22 @@ function EditMovie({
           </DialogActions>
         </Box>
       </Box>
+      <Collapse in={alertOpen}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              color="inherit"
+              size="small"
+              onClick={() => setAlertOpen(false)}
+            >
+              <Close />
+            </IconButton>
+          }
+        >
+          Please fill out all fields!
+        </Alert>
+      </Collapse>
     </Dialog>
   );
 }
