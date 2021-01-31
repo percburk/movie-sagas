@@ -72,7 +72,7 @@ function* editMovie(action) {
   const movieEdited = action.payload;
   try {
     yield axios.put(`/api/movie/edit/${movieEdited.id}`, movieEdited);
-    yield put({ type: 'FETCH_MOVIES' });
+    yield put({ type: 'FETCH_ONE_MOVIE', payload: movieEdited.id });
   } catch (err) {
     console.log('error in editMovie', err);
   }
