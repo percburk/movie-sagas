@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET route for one movie for details and corresponding genres
+// GET route for one movie for MovieDetails
 router.get('/:id', (req, res) => {
   const sqlText = `
     SELECT "movies".*, ARRAY_AGG("genres".name) AS "genre_group", 
@@ -41,7 +41,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// POST route to add a new movie and genres
+// POST route to add a new movie and genres, this contains 2 pool queries
 router.post('/', (req, res) => {
   console.log(req.body);
   // RETURNING "id" will return back the id of the newly created movie
@@ -51,7 +51,7 @@ router.post('/', (req, res) => {
     RETURNING "id";
   `;
 
-  // This first query makes the movie
+  // Query #1 - This makes the new movie and returns the id
   pool
     .query(sqlTextNewMovie, [
       req.body.title,
@@ -59,42 +59,42 @@ router.post('/', (req, res) => {
       req.body.description,
     ])
     .then((result) => {
-      console.log('New Movie Id:', result.rows[0].id); // ID is here
+      console.log('New Movie Id:', result.rows[0].id); // new id is here
       const createdMovieId = result.rows[0].id;
       const genreArray = req.body.genreArray;
 
-      // Looping through genres to make right amount of '$'s
+      // Looping through genres to make right amount of '$'s for the genres
       let sqlArrayValues = '';
       for (i = 2; i <= genreArray.length + 1; i++) {
         sqlArrayValues += `($1, $${i}),`;
       }
       sqlArrayValues = sqlArrayValues.slice(0, -1); // Takes off the last comma
 
-      // Add genres to new movie ID
+      // Build query with loop contents, add to new movie id
       const sqlTextNewMovieGenre = `
         INSERT INTO "movies_genres" ("movie_id", "genre_id")
         VALUES 
         ${sqlArrayValues};
       `;
 
-      // Second query adds contents of genreArray to new movie
+      // Query #2 - sends new values to "movies_genres" reference table
       pool
         .query(sqlTextNewMovieGenre, [createdMovieId, ...genreArray])
         .then(res.sendStatus(201)) // send back success!
         .catch((err) => {
-          // Catch for second query
+          // Catch for Query #2
           console.log(`error in POST with query ${sqlTextNewMovieGenre}`, err);
           res.sendStatus(500);
         });
     })
     .catch((err) => {
-      // Catch for first query
+      // Catch for Query #1
       console.log(`error in POST with query ${sqlTextNewMovie}`, err);
       res.sendStatus(500);
     });
 });
 
-// PUT route to edit a movie
+// PUT route to edit a movie, this contains 3 pool queries
 router.put('/edit/:id', (req, res) => {
   const movieEdit = req.body;
   const id = req.params.id;
@@ -105,7 +105,7 @@ router.put('/edit/:id', (req, res) => {
     WHERE "id" = $4;
   `;
 
-  // Send update query
+  // Query #1 - Sends update query for title, poster, description
   pool
     .query(sqlText, [
       movieEdit.title,
@@ -114,37 +114,38 @@ router.put('/edit/:id', (req, res) => {
       id,
     ])
     .then(() => {
-      // Deleting old genre entries from "movies_genres"
+      // Deleting old genre entries from "movies_genres" reference table
       const deleteSqlText = `
         DELETE FROM "movies_genres" WHERE "movie_id" = $1;
       `;
 
-      // Send delete query
+      // Query #2 - Sends the delete query to clear previous genre entries
       pool
         .query(deleteSqlText, [id])
         .then(() => {
-          // This query is sending new array of genres to "movies_genres"
+          // Array of updated genres for this movie
           const genreArray = req.body.genreArray;
 
-          // Building sqlTextGenres by looping through array to assign $'s
+          // Building query by looping through array to assign right num of $'s
           let sqlArrayValues = '';
           for (i = 2; i <= genreArray.length + 1; i++) {
             sqlArrayValues += `($1, $${i}),`;
           }
           sqlArrayValues = sqlArrayValues.slice(0, -1); // Takes off last comma
 
-          // Add genres to new movie ID
+          // Form query together, making "movie_id" / "genre_id" value pairs
           const sqlTextGenres = `
             INSERT INTO "movies_genres" ("movie_id", "genre_id")
             VALUES 
             ${sqlArrayValues};
           `;
 
+          // Query #3 - Sends new values to "movies_genres" reference table
           pool
             .query(sqlTextGenres, [id, ...genreArray])
             .then(res.sendStatus(201)) // send back success!
             .catch((err) => {
-              // Catch for third insert genres query
+              // Catch for Query #3
               console.log(
                 `error in PUT genres with query ${sqlTextGenres}`,
                 err
@@ -153,13 +154,13 @@ router.put('/edit/:id', (req, res) => {
             });
         })
         .catch((err) => {
-          // Catch for second delete query
+          // Catch for Query #2
           console.log(`error in PUT with query ${deleteSqlText}`, err);
           res.sendStatus(500);
         });
     })
     .catch((err) => {
-      // Catch for first update query
+      // Catch for Query #1
       console.log(`error in PUT with query ${sqlText}`, err);
       res.sendStatus(500);
     });

@@ -33,7 +33,7 @@ function* fetchAllMovies() {
   }
 }
 
-// GET for one movie from DB for MovieDetails
+// GET one movie from DB for MovieDetails
 function* fetchOneMovie(action) {
   const id = action.payload;
   try {
@@ -83,7 +83,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 // Reducers -----------------
 
-// Used to store movies returned from the server
+// Used to store all the movies returned from the server
 const moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'SET_MOVIES':
@@ -93,6 +93,7 @@ const moviesReducer = (state = [], action) => {
   }
 };
 
+// Used to store the one movie shown on MovieDetails
 const oneMovieReducer = (state = {}, action) => {
   switch (action.type) {
     case 'SET_MOVIE_FOR_DETAILS':
@@ -102,7 +103,7 @@ const oneMovieReducer = (state = {}, action) => {
   }
 };
 
-// Used to store the movie genres from the server
+// Used to store all the movie genres from the server
 const genresReducer = (state = [], action) => {
   switch (action.type) {
     case 'SET_GENRES':
