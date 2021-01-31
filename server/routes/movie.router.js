@@ -77,7 +77,7 @@ router.post('/', (req, res) => {
         ${sqlArrayValues};
       `;
 
-      // Query #2 - sends new values to "movies_genres" reference table
+      // Query #2 - sends new values to "movies_genres" junction table
       pool
         .query(sqlTextNewMovieGenre, [createdMovieId, ...genreArray])
         .then(res.sendStatus(201)) // send back success!
@@ -114,7 +114,7 @@ router.put('/edit/:id', (req, res) => {
       id,
     ])
     .then(() => {
-      // Deleting old genre entries from "movies_genres" reference table
+      // Deleting old genre entries from "movies_genres" junction table
       const deleteSqlText = `
         DELETE FROM "movies_genres" WHERE "movie_id" = $1;
       `;
@@ -140,7 +140,7 @@ router.put('/edit/:id', (req, res) => {
             ${sqlArrayValues};
           `;
 
-          // Query #3 - Sends new values to "movies_genres" reference table
+          // Query #3 - Sends new values to "movies_genres" junction table
           pool
             .query(sqlTextGenres, [id, ...genreArray])
             .then(res.sendStatus(201)) // send back success!
