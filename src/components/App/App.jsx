@@ -5,6 +5,14 @@ import MovieDetails from '../MovieDetails/MovieDetails';
 import AddMovie from '../AddMovie/AddMovie';
 import Heading from '../Heading/Heading';
 import './App.css';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { CssBaseline } from '@material-ui/core';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -15,7 +23,8 @@ function App() {
   };
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Router>
         <Route path="/" exact>
           <Heading
@@ -29,7 +38,7 @@ function App() {
         </Route>
         <AddMovie dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
       </Router>
-    </div>
+    </ThemeProvider>
   );
 }
 

@@ -9,7 +9,6 @@ import {
   makeStyles,
   Paper,
   Grid,
-  Divider,
 } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,15 +36,15 @@ function MovieList({ bodyRef }) {
   };
 
   return (
-    <Box ref={bodyRef} display="flex" flexWrap="wrap" justifyContent="center">
+    <Box ref={bodyRef} paddingTop={2} display="flex" flexWrap="wrap" justifyContent="center">
       {movies.map((item) => {
         return (
           <Box m={2} key={item.id}>
             <Paper elevation={4}>
-              <Box p={2} width={240} height={400}>
+              <Box width={220} height={450}>
                 <Grid container direction="column" align="center" spacing={2}>
                   <Grid item>
-                    <Box py={1}>
+                    <Box py={2}>
                       <img
                         className="image"
                         src={item.poster}
@@ -54,9 +53,8 @@ function MovieList({ bodyRef }) {
                       />
                     </Box>
                   </Grid>
-                  <Divider />
                   <Grid item>
-                    <Box paddingTop={2}>
+                    <Box paddingTop={1}>
                       <Typography variant="body1">{item.title}</Typography>
                     </Box>
                   </Grid>
