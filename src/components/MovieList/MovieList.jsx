@@ -44,7 +44,7 @@ function MovieList() {
               <Box p={2} width={240} height={400}>
                 <Grid container direction="column" align="center" spacing={2}>
                   <Grid item>
-                    <Box paddingBottom={1}>
+                    <Box py={1}>
                       <img
                         className="image"
                         src={item.poster}

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
+import { Grid, Box, Paper, Typography, Button } from '@material-ui/core';
+import { ArrowBackIos } from '@material-ui/icons';
 
 function MovieDetails() {
   const history = useHistory();
@@ -14,15 +16,48 @@ function MovieDetails() {
   };
 
   return (
-    <>
-      <p>In MovieDetails!</p>
-      <p>{movie.title}</p>
-      <img src={movie.poster} />
-      <p>{movie.description}</p>
-      {movie.genre_group &&
-        movie.genre_group.map((item, i) => <p key={i}>{item}</p>)}
-      <button onClick={handleBack}>Go back</button>
-    </>
+    <Box m={3}>
+      <Grid container spacing={10}>
+        <Grid item xs={4}>
+          <Paper elevation={4}>
+            <Box p={6} display="flex" justifyContent="center">
+              <img style={{ height: '400px' }} src={movie.poster} />
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={8}>
+          <Box>
+            <Box paddingBottom={3}>
+              <Typography variant="h4">{movie.title}</Typography>
+            </Box>
+            <Box paddingBottom={3}>
+              <Typography variant="body1">{movie.description}</Typography>
+            </Box>
+            <Box paddingBottom={3}>
+              <Typography variant="h5" gutterBottom>
+                Genres
+              </Typography>
+              <Box py={1}>
+                {movie.genre_group &&
+                  movie.genre_group.map((item, i) => (
+                    <Typography variant="h6" key={i}>
+                      {item}
+                    </Typography>
+                  ))}
+              </Box>
+            </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleBack}
+              startIcon={<ArrowBackIos />}
+            >
+              Go back
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 

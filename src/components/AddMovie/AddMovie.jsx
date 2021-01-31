@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   TextField,
   Button,
@@ -10,7 +11,11 @@ import {
   DialogContent,
   DialogTitle,
   DialogActions,
+  Collapse,
+  IconButton,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Close } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +26,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddMovie({ dialogOpen, setDialogOpen }) {
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const genres = useSelector((state) => state.genresReducer);
+  const [alertOpen, setAlertOpen] = useState(false);
   const [genresToAdd, setGenresToAdd] = useState([]);
   const [movieToAdd, setMovieToAdd] = useState({
     title: '',
@@ -35,13 +42,23 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch({
-      type: 'POST_NEW_MOVIE',
-      payload: { ...movieToAdd, genreArray: genresToAdd },
-    });
-    setGenresToAdd([]);
-    setMovieToAdd({ title: '', poster: '', description: '' });
-    setDialogOpen(false);
+    if (
+      movieToAdd.title &&
+      movieToAdd.poster &&
+      movieToAdd.description &&
+      genresToAdd[0]
+    ) {
+      dispatch({
+        type: 'POST_NEW_MOVIE',
+        payload: { ...movieToAdd, genreArray: genresToAdd },
+      });
+      setGenresToAdd([]);
+      setMovieToAdd({ title: '', poster: '', description: '' });
+      setDialogOpen(false);
+      history.push('/');
+    } else {
+      setAlertOpen(true);
+    }
   };
 
   const handleTextChange = (key) => (event) => {
@@ -49,9 +66,11 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
   };
 
   const handleGenreAddition = (id) => {
-    genresToAdd.indexOf(id) === -1
-      ? setGenresToAdd([...genresToAdd, id])
-      : setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
+    if (genresToAdd.indexOf(id) === -1) {
+      setGenresToAdd([...genresToAdd, id]);
+    } else {
+      setGenresToAdd(genresToAdd.filter((entry) => entry !== id));
+    }
   };
 
   return (
@@ -120,6 +139,22 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
           </Button>
         </DialogActions>
       </Box>
+      <Collapse in={alertOpen}>
+        <Alert
+          severity="error"
+          action={
+            <IconButton
+              color="inherit"
+              size="small"
+              onClick={() => setAlertOpen(false)}
+            >
+              <Close />
+            </IconButton>
+          }
+        >
+          Please fill out all fields!
+        </Alert>
+      </Collapse>
     </Dialog>
   );
 }
