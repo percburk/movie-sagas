@@ -10,6 +10,7 @@ import {
   Paper,
   Grid,
 } from '@material-ui/core';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -26,17 +27,20 @@ function MovieList({ bodyRef }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const movies = useSelector((state) => state.moviesReducer);
-  useEffect(() => {
-    dispatch({ type: 'FETCH_MOVIES' });
-    dispatch({type: 'FETCH_GENRES'})
-  }, []);
+  useEffect(() => dispatch({ type: 'FETCH_MOVIES' }), []);
 
   const handleClickPoster = (id) => {
     history.push(`/details/${id}`);
   };
 
   return (
-    <Box ref={bodyRef} paddingTop={2} display="flex" flexWrap="wrap" justifyContent="center">
+    <Box
+      ref={bodyRef}
+      paddingTop={2}
+      display="flex"
+      flexWrap="wrap"
+      justifyContent="center"
+    >
       {movies.map((item) => {
         return (
           <Box m={2} key={item.id}>

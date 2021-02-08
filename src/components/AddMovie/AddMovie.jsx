@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
@@ -38,8 +38,7 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
     description: '',
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (
       movieToAdd.title &&
       movieToAdd.poster &&
@@ -138,7 +137,11 @@ function AddMovie({ dialogOpen, setDialogOpen }) {
             >
               Cancel
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleSubmit}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSubmit}
+            >
               Submit
             </Button>
           </DialogActions>

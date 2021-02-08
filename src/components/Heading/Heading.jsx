@@ -28,7 +28,7 @@ function Heading({ setDialogOpen, handleClickToBody }) {
         alignItems="center"
       >
         <Box flexGrow={1}>
-          <Typography variant="body1">2001: A Space Odyssey, directed by Stanley Kubrick</Typography>
+          <Typography variant="body1">2001: A Space Odyssey</Typography>
         </Box>
         <Box>
           <Fab onClick={handleClickToBody} color="primary">

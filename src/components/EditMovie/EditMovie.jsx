@@ -40,8 +40,7 @@ function EditMovie({
   const genres = useSelector((state) => state.genresReducer);
   const [alertOpen, setAlertOpen] = useState(false);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (
       editMovie.title &&
       editMovie.poster &&

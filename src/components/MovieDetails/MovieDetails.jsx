@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Box, Paper, Typography, Button, Fab, makeStyles } from '@material-ui/core';
+import {
+  Grid,
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Fab,
+  makeStyles,
+} from '@material-ui/core';
 import { ArrowBackIos, Add, Edit } from '@material-ui/icons';
 import EditMovie from '../EditMovie/EditMovie';
 import './MovieDetails.css';
@@ -28,7 +36,10 @@ function MovieDetails({ setDialogOpen }) {
   });
   const [editGenre, setEditGenre] = useState([]);
   let { id } = useParams();
-  useEffect(() => dispatch({ type: 'FETCH_ONE_MOVIE', payload: id }), []);
+  useEffect(() => {
+    dispatch({ type: 'FETCH_GENRES' });
+    dispatch({ type: 'FETCH_ONE_MOVIE', payload: id });
+  }, []);
 
   const handleBack = () => {
     history.push('/');
