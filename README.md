@@ -1,3 +1,7 @@
+![repo size](https://img.shields.io/github/languages/code-size/percburk/movie-sagas?style=flat-square)
+![languages](https://img.shields.io/github/languages/top/percburk/movie-sagas?style=flat-square)
+![forks](https://img.shields.io/github/forks/percburk/movie-sagas?style=social)
+
 # MOVIE SAGAS
 
 
