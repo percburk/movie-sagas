@@ -5,14 +5,18 @@
 
 _Duration: Weekend Assignment_
 
-This project was a culmination of a lot of study at Prime. It included working with React, Redux, Redux-Saga, Material-UI, React-Router, SQL, and more. It was the most challenging app to create to date.
+This project was a culmination of a lot of study at Prime. It included working with React, Redux-Saga, Material-UI, React-Router, SQL, and more. It was the most challenging app to create to date.
 
-Our main points of study this week were working with Redux-Saga and many-to-many tables in SQL. Here, we had three tables total: a movie table, genre table, and movie_genre junction table. The most challenging problem I faced was sending multiple genres / movie value pairs into the junction table, which was eventually done through concatenating a query string that contained all the sanitized values I needed. It was a mind bender!
+Our main points of study this week were working with Redux-Saga and many-to-many tables in SQL. Here, we had three tables total: a movie table, genre table, and movie_genre junction table. The most challenging problem I faced was sending multiple genres / movie value pairs into the junction table, which was eventually done through concatenating a query string that contained all the sanitized values I needed.
 
 We displayed the list of movies, and used client side routing to show individual details when the movie poster is clicked. Movies can also be added and edited. When editing, the information for the movie populates the "edit movie" pop-up dialog.
 
 
 ## Screen Shots
+
+- Landing Page ![landing-page](documentation/images/landing-page.png)
+- Movie Gallery ![movie-gallery](documentation/images/gallery.png)
+- Edit Movie ![edit-movie](documentation/images/edit-movie.png)
 
 
 ## Prerequisites
@@ -43,7 +47,6 @@ Click on a movie poster to see additional information about each movie. Click on
 
 - React
 - React Router
-- Redux
 - Redux-Saga
 - Material-UI
 - Node.js
@@ -58,7 +61,7 @@ Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped m
 
 ## Support
 
-If you have suggestions or issues, please email me at [percburk@gmail.com](percburk@gmail.com)
+If you have suggestions or issues, please [email me](percburk@gmail.com)!
 
 
 
