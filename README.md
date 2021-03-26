@@ -65,7 +65,7 @@ Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped m
 
 ## Support
 
-If you have suggestions or issues, please [email me](percburk@gmail.com)!
+If you have suggestions or issues, please [email me](mailto:percburk@gmail.com)!
 
 
 
